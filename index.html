@@ -83,8 +83,8 @@
       <!-- Ambient Lighting -->
       <div id="ambient-glow" class="absolute w-[600px] h-[350px] bg-brand-red/20 blur-[130px] rounded-full pointer-events-none -top-10"></div>
 
-      <!-- Headline -->
-      <div class="text-center z-10 select-none mt-4">
+      <!-- Headline Group Wrapper (Scrolled in and out by ScrollTrigger) -->
+      <div id="hero-header-group" class="text-center z-10 select-none mt-4 will-change-transform">
         <p id="hero-kicker" class="text-xs md:text-sm font-semibold tracking-[0.6em] text-brand-red uppercase mb-4 opacity-0">
           Electric Hyper-Tourer Prototype
         </p>
@@ -127,8 +127,8 @@
         </div>
       </div>
 
-      <!-- Metrics Row -->
-      <div id="metrics-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 w-full max-w-5xl z-20 px-4">
+      <!-- Metrics Row Wrapper -->
+      <div id="metrics-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 w-full max-w-5xl z-20 px-4 will-change-transform">
         
         <div class="metric-card glass-card p-4 md:p-5 rounded-xl opacity-0 transform translate-y-8">
           <div class="text-2xl md:text-3xl font-extrabold text-white font-display">
@@ -164,11 +164,13 @@
 
       </div>
 
-      <!-- Scroll Indicator -->
-      <div id="scroll-indicator" class="absolute bottom-3 flex flex-col items-center gap-1.5 opacity-0">
-        <span class="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold">Scroll Down</span>
-        <div class="w-4 h-7 border border-zinc-600 rounded-full flex justify-center p-1">
-          <div class="w-1 h-1.5 bg-brand-red rounded-full animate-bounce"></div>
+      <!-- Scroll Indicator Wrapper -->
+      <div id="scroll-indicator-wrap" class="absolute bottom-3 flex flex-col items-center gap-1.5 will-change-transform">
+        <div id="scroll-indicator" class="flex flex-col items-center gap-1.5 opacity-0">
+          <span class="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold">Scroll Down</span>
+          <div class="w-4 h-7 border border-zinc-600 rounded-full flex justify-center p-1">
+            <div class="w-1 h-1.5 bg-brand-red rounded-full animate-bounce"></div>
+          </div>
         </div>
       </div>
 
@@ -220,7 +222,7 @@
 
     window.addEventListener('DOMContentLoaded', () => {
       
-      // 1. Initial Load Choreography
+      // 1. Initial Load Choreography (Targets the children)
       const introTl = gsap.timeline({ defaults: { ease: 'power4.out' } });
 
       introTl
@@ -274,7 +276,7 @@
         });
       }
 
-      // 2. Scroll-Driven Animation (GSAP ScrollTrigger)
+      // 2. Scroll-Driven Animation (Targets the parent wrappers)
       const scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: '#hero-scroll-container',
@@ -287,20 +289,15 @@
       });
 
       scrollTl
-        // Phase 1: Headline fades out
-        .to('#hero-headline', {
+        // Phase 1: Headline wrapper fades and blurs out smoothly on scroll down, rewinds to 100% on scroll up
+        .to('#hero-header-group', {
           scale: 0.85,
           opacity: 0,
           y: -60,
           filter: 'blur(8px)',
           ease: 'power1.in'
         }, 0)
-        .to('#hero-kicker', {
-          opacity: 0,
-          y: -30,
-          ease: 'power1.in'
-        }, 0)
-        .to('#scroll-indicator', {
+        .to('#scroll-indicator-wrap', {
           opacity: 0,
           duration: 0.2
         }, 0)
@@ -322,15 +319,14 @@
           ease: 'power1.inOut'
         }, 0)
 
-        // Phase 3: Metrics slide down & dim
-        .to('.metric-card', {
+        // Phase 3: Metrics wrapper slides down & dims
+        .to('#metrics-container', {
           y: 40,
-          opacity: 0.2,
-          stagger: 0.05,
+          opacity: 0.15,
           ease: 'power1.in'
         }, 0.2)
         
-        // Phase 4: Drive-by horizontal exit
+        // Phase 4: Drive-by horizontal breakaway
         .to('#car-wrapper', {
           x: '35vw',
           rotationZ: 1.5,
