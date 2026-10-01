@@ -1,0 +1,337 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth bg-[#08080c] text-white antialiased">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Luxury Hypercar | Scroll-Driven Hero</title>
+  
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            display: ['Syncopate', 'sans-serif'],
+            sans: ['Plus Jakarta Sans', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              red: '#ff2d55',
+              glow: '#ff375f33'
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+
+  <!-- GSAP & ScrollTrigger -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
+
+  <style>
+    /* Prevent layout shifting & enforce smooth rendering */
+    body {
+      overflow-x: hidden;
+      background-color: #060709;
+    }
+    
+    .will-change-transform {
+      will-change: transform, opacity;
+      transform: translateZ(0);
+      backface-visibility: hidden;
+    }
+
+    .radial-gradient-bg {
+      background: radial-gradient(circle at 50% 45%, rgba(255, 45, 85, 0.12) 0%, rgba(10, 10, 15, 0) 70%);
+    }
+
+    .glass-card {
+      background: rgba(18, 20, 29, 0.65);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+  </style>
+</head>
+<body class="selection:bg-brand-red selection:text-white">
+
+  <!-- Navigation Bar -->
+  <header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
+    <div class="text-xs font-bold tracking-[0.35em] uppercase text-zinc-300 font-display">
+      ITZ<span class="text-brand-red">FIZZ</span> MOTORS
+    </div>
+    <div class="hidden md:flex items-center gap-8 text-xs tracking-widest text-zinc-400 font-medium">
+      <a href="#overview" class="hover:text-white transition-colors">OVERVIEW</a>
+      <a href="#performance" class="hover:text-white transition-colors">PERFORMANCE</a>
+      <a href="#aerodynamics" class="hover:text-white transition-colors">SPECS</a>
+    </div>
+    <button class="text-xs uppercase tracking-widest px-5 py-2.5 rounded-full border border-zinc-700 hover:border-brand-red transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,45,85,0.4)]">
+      Reserve
+    </button>
+  </header>
+
+  <!-- PINNED SCROLL HERO CONTAINER -->
+  <div id="hero-scroll-container" class="relative w-full h-screen">
+    <section id="hero-section" class="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden radial-gradient-bg px-4">
+      
+      <!-- Ambient Lighting Ring -->
+      <div id="ambient-glow" class="absolute w-[600px] h-[350px] bg-brand-red/20 blur-[130px] rounded-full pointer-events-none -top-10"></div>
+
+      <!-- Headline -->
+      <div class="text-center z-10 select-none mt-4">
+        <p id="hero-kicker" class="text-xs md:text-sm font-semibold tracking-[0.6em] text-brand-red uppercase mb-4 opacity-0">
+          Electric Hyper-Tourer Prototype
+        </p>
+        <h1 id="hero-headline" class="text-2xl sm:text-4xl md:text-6xl lg:text-7xl font-bold font-display uppercase tracking-[0.25em] md:tracking-[0.45em] text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-600 opacity-0 leading-tight">
+          W E L C O M E &nbsp; I T Z &nbsp; F I Z Z
+        </h1>
+      </div>
+
+      <!-- Hero Visual Element (Supercar Render) -->
+      <div id="car-wrapper" class="relative w-full max-w-4xl h-[260px] sm:h-[340px] md:h-[420px] flex items-center justify-center my-2 will-change-transform z-20">
+        <!-- Underglow & Floor Shadow -->
+        <div id="car-shadow" class="absolute bottom-6 w-3/4 h-10 bg-black/80 blur-2xl rounded-full transform scale-x-100 will-change-transform"></div>
+        <div id="car-ground-light" class="absolute bottom-8 w-1/2 h-6 bg-brand-red/25 blur-xl rounded-full"></div>
+        
+        <!-- High-res Transparent Vehicle Render -->
+        <img 
+          id="hero-car"
+          src="https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1600&q=80" 
+          alt="Aerodynamic Electric Sports Car" 
+          class="relative w-full h-full object-contain filter drop-shadow-[0_20px_45px_rgba(0,0,0,0.9)] will-change-transform pointer-events-none select-none rounded-2xl"
+        />
+      </div>
+
+      <!-- Impact Metrics / Statistics Row -->
+      <div id="metrics-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 w-full max-w-5xl z-20 px-4">
+        
+        <div class="metric-card glass-card p-4 md:p-5 rounded-xl opacity-0 transform translate-y-8">
+          <div class="text-2xl md:text-3xl font-extrabold text-white font-display">
+            <span class="stat-number" data-target="1.99">0.00</span><span class="text-brand-red text-xl">s</span>
+          </div>
+          <div class="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold mt-1">0–60 MPH Launch</div>
+          <div class="text-[10px] text-zinc-500 mt-0.5">Tri-motor torque vectoring</div>
+        </div>
+
+        <div class="metric-card glass-card p-4 md:p-5 rounded-xl opacity-0 transform translate-y-8">
+          <div class="text-2xl md:text-3xl font-extrabold text-white font-display">
+            <span class="stat-number" data-target="1020">0</span><span class="text-brand-red text-xl">HP</span>
+          </div>
+          <div class="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold mt-1">Peak Output</div>
+          <div class="text-[10px] text-zinc-500 mt-0.5">900V SiC architecture</div>
+        </div>
+
+        <div class="metric-card glass-card p-4 md:p-5 rounded-xl opacity-0 transform translate-y-8">
+          <div class="text-2xl md:text-3xl font-extrabold text-white font-display">
+            <span class="stat-number" data-target="420">0</span><span class="text-brand-red text-xl">MI</span>
+          </div>
+          <div class="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold mt-1">Highway Range</div>
+          <div class="text-[10px] text-zinc-500 mt-0.5">Next-gen solid state cells</div>
+        </div>
+
+        <div class="metric-card glass-card p-4 md:p-5 rounded-xl opacity-0 transform translate-y-8">
+          <div class="text-2xl md:text-3xl font-extrabold text-white font-display">
+            <span class="text-brand-red text-xl">0.</span><span class="stat-number" data-target="208">000</span><span class="text-brand-red text-xl">Cd</span>
+          </div>
+          <div class="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold mt-1">Drag Coefficient</div>
+          <div class="text-[10px] text-zinc-500 mt-0.5">Active aero active louvers</div>
+        </div>
+
+      </div>
+
+      <!-- Subtle Scroll Prompt -->
+      <div id="scroll-indicator" class="absolute bottom-3 flex flex-col items-center gap-1.5 opacity-0">
+        <span class="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold">Scroll Down</span>
+        <div class="w-4 h-7 border border-zinc-600 rounded-full flex justify-center p-1">
+          <div class="w-1 h-1.5 bg-brand-red rounded-full animate-bounce"></div>
+        </div>
+      </div>
+
+    </section>
+  </div>
+
+  <!-- SECONDARY CONTENT SECTION (Demonstrates Pin Exit) -->
+  <section id="performance" class="relative z-30 min-h-screen bg-[#07080b] border-t border-zinc-800/80 px-6 py-28">
+    <div class="max-w-6xl mx-auto">
+      <div class="max-w-2xl">
+        <span class="text-xs uppercase tracking-[0.4em] text-brand-red font-bold">Engineering Philosophy</span>
+        <h2 class="text-3xl md:text-5xl font-display uppercase tracking-widest font-bold text-white mt-3 mb-6">
+          Speed Engineered To Precision
+        </h2>
+        <p class="text-zinc-400 leading-relaxed text-sm md:text-base mb-8">
+          Every contour and carbon-composite surface is optimized through computational fluid dynamics. The low center of gravity combined with sub-second damping creates an uninterrupted road connection.
+        </p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-12">
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="text-brand-red font-display text-lg mb-2">01 / CHASSIS</div>
+          <h3 class="text-white text-lg font-bold mb-2">Carbon Monocoque</h3>
+          <p class="text-zinc-400 text-xs leading-relaxed">
+            Ultra-stiff cell architecture provides Formula 1 grade torsional rigidity with zero unnecessary mass.
+          </p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="text-brand-red font-display text-lg mb-2">02 / KINETICS</div>
+          <h3 class="text-white text-lg font-bold mb-2">Dual-Inverter Drive</h3>
+          <p class="text-zinc-400 text-xs leading-relaxed">
+            Instantaneous microsecond motor response capable of delivering 1,400 Nm of wheel torque on demand.
+          </p>
+        </div>
+        <div class="glass-card p-6 rounded-2xl">
+          <div class="text-brand-red font-display text-lg mb-2">03 / CHARGE</div>
+          <h3 class="text-white text-lg font-bold mb-2">15-Min Fast Charge</h3>
+          <p class="text-zinc-400 text-xs leading-relaxed">
+            350 kW DC charging replenishes 10% to 80% state-of-charge in under fifteen minutes.
+          </p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- INTERACTION SCRIPT -->
+  <script>
+    gsap.registerPlugin(ScrollTrigger);
+
+    window.addEventListener('DOMContentLoaded', () => {
+      
+      // ----------------------------------------------------
+      // 1. Initial Load Animation (Staggered Intro Timeline)
+      // ----------------------------------------------------
+      const introTl = gsap.timeline({ defaults: { ease: 'power4.out' } });
+
+      introTl
+        .to('#hero-kicker', {
+          opacity: 1,
+          y: 0,
+          duration: 1.0,
+          delay: 0.2
+        })
+        .to('#hero-headline', {
+          opacity: 1,
+          y: 0,
+          duration: 1.2,
+          letterSpacing: window.innerWidth > 768 ? '0.45em' : '0.25em'
+        }, '-=0.8')
+        .fromTo('#car-wrapper', 
+          { scale: 0.82, opacity: 0, y: 50 },
+          { scale: 1, opacity: 1, y: 0, duration: 1.5, ease: 'power3.out' },
+          '-=1.0'
+        )
+        .to('.metric-card', {
+          opacity: 1,
+          y: 0,
+          duration: 0.8,
+          stagger: 0.12,
+          ease: 'back.out(1.2)',
+          onComplete: startCounters
+        }, '-=0.8')
+        .to('#scroll-indicator', {
+          opacity: 1,
+          duration: 0.8
+        }, '-=0.4');
+
+      // Number Counting Animation
+      function startCounters() {
+        document.querySelectorAll('.stat-number').forEach((counter) => {
+          const target = parseFloat(counter.getAttribute('data-target'));
+          const isDecimal = target % 1 !== 0;
+          
+          gsap.to(counter, {
+            innerHTML: target,
+            duration: 1.8,
+            ease: 'power2.out',
+            snap: { innerHTML: isDecimal ? 0.01 : 1 },
+            onUpdate: function() {
+              if (isDecimal) {
+                counter.innerHTML = Number(this.targets()[0].innerHTML).toFixed(2);
+              }
+            }
+          });
+        });
+      }
+
+      // ----------------------------------------------------
+      // 2. Scroll-Driven Animation (GSAP ScrollTrigger Scrub)
+      // ----------------------------------------------------
+      // We pin the hero container over 2500px of scrolling distance.
+      // scrub: 1.2 applies fluid inertia/lerp to track the wheel motion.
+      const scrollTl = gsap.timeline({
+        scrollTrigger: {
+          trigger: '#hero-scroll-container',
+          start: 'top top',
+          end: '+=2400',
+          pin: '#hero-section',
+          scrub: 1.2,
+          anticipatePin: 1
+        }
+      });
+
+      scrollTl
+        // Phase 1: Headline recedes and blurs out as the user begins scrolling
+        .to('#hero-headline', {
+          scale: 0.85,
+          opacity: 0,
+          y: -60,
+          filter: 'blur(8px)',
+          ease: 'power1.in'
+        }, 0)
+        .to('#hero-kicker', {
+          opacity: 0,
+          y: -30,
+          ease: 'power1.in'
+        }, 0)
+        .to('#scroll-indicator', {
+          opacity: 0,
+          duration: 0.2
+        }, 0)
+
+        // Phase 2: Car zooms forward and accelerates across screen
+        .to('#car-wrapper', {
+          scale: 1.35,
+          y: -20,
+          ease: 'power1.inOut'
+        }, 0)
+        .to('#car-shadow', {
+          scaleX: 1.4,
+          opacity: 0.5,
+          ease: 'power1.inOut'
+        }, 0)
+        .to('#ambient-glow', {
+          scale: 1.6,
+          opacity: 0.35,
+          ease: 'power1.inOut'
+        }, 0)
+
+        // Phase 3: Metrics transform and shift down smoothly
+        .to('.metric-card', {
+          y: 40,
+          opacity: 0.2,
+          stagger: 0.05,
+          ease: 'power1.in'
+        }, 0.2)
+        
+        // Phase 4: Dynamic horizontal drive-by shift
+        .to('#car-wrapper', {
+          x: '35vw',
+          rotationZ: 1.5,
+          duration: 1.2,
+          ease: 'power2.in'
+        }, 0.6)
+        .to('#car-shadow', {
+          x: '35vw',
+          duration: 1.2,
+          ease: 'power2.in'
+        }, 0.6);
+
+    });
+  </script>
+</body>
+</html>
