@@ -36,7 +36,6 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
 
   <style>
-    /* Prevent layout shifting & enforce smooth rendering */
     body {
       overflow-x: hidden;
       background-color: #060709;
@@ -62,7 +61,7 @@
 </head>
 <body class="selection:bg-brand-red selection:text-white">
 
-  <!-- Navigation Bar -->
+  <!-- Fixed Header Navigation -->
   <header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-8 py-6 max-w-7xl mx-auto">
     <div class="text-xs font-bold tracking-[0.35em] uppercase text-zinc-300 font-display">
       ITZ<span class="text-brand-red">FIZZ</span> MOTORS
@@ -77,11 +76,11 @@
     </button>
   </header>
 
-  <!-- PINNED SCROLL HERO CONTAINER -->
+  <!-- PINNED SCROLL HERO TRACK -->
   <div id="hero-scroll-container" class="relative w-full h-screen">
     <section id="hero-section" class="sticky top-0 h-screen w-full flex flex-col items-center justify-center overflow-hidden radial-gradient-bg px-4">
       
-      <!-- Ambient Lighting Ring -->
+      <!-- Ambient Lighting -->
       <div id="ambient-glow" class="absolute w-[600px] h-[350px] bg-brand-red/20 blur-[130px] rounded-full pointer-events-none -top-10"></div>
 
       <!-- Headline -->
@@ -94,22 +93,41 @@
         </h1>
       </div>
 
-      <!-- Hero Visual Element (Supercar Render) -->
-      <div id="car-wrapper" class="relative w-full max-w-4xl h-[260px] sm:h-[340px] md:h-[420px] flex items-center justify-center my-2 will-change-transform z-20">
-        <!-- Underglow & Floor Shadow -->
-        <div id="car-shadow" class="absolute bottom-6 w-3/4 h-10 bg-black/80 blur-2xl rounded-full transform scale-x-100 will-change-transform"></div>
-        <div id="car-ground-light" class="absolute bottom-8 w-1/2 h-6 bg-brand-red/25 blur-xl rounded-full"></div>
-        
-        <!-- High-res Transparent Vehicle Render -->
-        <img 
-          id="hero-car"
-          src="https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1600&q=80" 
-          alt="Aerodynamic Electric Sports Car" 
-          class="relative w-full h-full object-contain filter drop-shadow-[0_20px_45px_rgba(0,0,0,0.9)] will-change-transform pointer-events-none select-none rounded-2xl"
-        />
+      <!-- Hero Visual (Outer wrapper pinned/scaled by ScrollTrigger with 3D Perspective) -->
+      <div 
+        id="car-wrapper" 
+        class="relative w-full max-w-4xl h-[260px] sm:h-[340px] md:h-[420px] flex items-center justify-center my-2 will-change-transform z-20"
+        style="perspective: 1200px;"
+      >
+        <!-- Inner Tilt Target (Manipulated by pointermove) -->
+        <div 
+          id="car-tilt-target" 
+          class="relative w-full h-full flex items-center justify-center will-change-transform" 
+          style="transform-style: preserve-3d;"
+        >
+          <!-- Ground Shadow -->
+          <div 
+            id="car-shadow" 
+            class="absolute bottom-6 w-3/4 h-10 bg-black/80 blur-2xl rounded-full transform will-change-transform pointer-events-none"
+          ></div>
+
+          <!-- Ground Light -->
+          <div 
+            id="car-ground-light" 
+            class="absolute bottom-8 w-1/2 h-6 bg-brand-red/25 blur-xl rounded-full pointer-events-none"
+          ></div>
+          
+          <!-- Car Asset -->
+          <img 
+            id="hero-car"
+            src="https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1600&q=80" 
+            alt="Aerodynamic Electric Sports Car" 
+            class="relative w-full h-full object-contain filter drop-shadow-[0_20px_45px_rgba(0,0,0,0.9)] will-change-transform pointer-events-none select-none rounded-2xl"
+          />
+        </div>
       </div>
 
-      <!-- Impact Metrics / Statistics Row -->
+      <!-- Metrics Row -->
       <div id="metrics-container" class="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6 w-full max-w-5xl z-20 px-4">
         
         <div class="metric-card glass-card p-4 md:p-5 rounded-xl opacity-0 transform translate-y-8">
@@ -141,12 +159,12 @@
             <span class="text-brand-red text-xl">0.</span><span class="stat-number" data-target="208">000</span><span class="text-brand-red text-xl">Cd</span>
           </div>
           <div class="text-[11px] uppercase tracking-wider text-zinc-400 font-semibold mt-1">Drag Coefficient</div>
-          <div class="text-[10px] text-zinc-500 mt-0.5">Active aero active louvers</div>
+          <div class="text-[10px] text-zinc-500 mt-0.5">Active aero louvers</div>
         </div>
 
       </div>
 
-      <!-- Subtle Scroll Prompt -->
+      <!-- Scroll Indicator -->
       <div id="scroll-indicator" class="absolute bottom-3 flex flex-col items-center gap-1.5 opacity-0">
         <span class="text-[10px] tracking-[0.3em] uppercase text-zinc-500 font-bold">Scroll Down</span>
         <div class="w-4 h-7 border border-zinc-600 rounded-full flex justify-center p-1">
@@ -157,7 +175,7 @@
     </section>
   </div>
 
-  <!-- SECONDARY CONTENT SECTION (Demonstrates Pin Exit) -->
+  <!-- Content Section for Scroll Pin Depth -->
   <section id="performance" class="relative z-30 min-h-screen bg-[#07080b] border-t border-zinc-800/80 px-6 py-28">
     <div class="max-w-6xl mx-auto">
       <div class="max-w-2xl">
@@ -196,15 +214,13 @@
     </div>
   </section>
 
-  <!-- INTERACTION SCRIPT -->
+  <!-- GSAP Animation Scripts -->
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
     window.addEventListener('DOMContentLoaded', () => {
       
-      // ----------------------------------------------------
-      // 1. Initial Load Animation (Staggered Intro Timeline)
-      // ----------------------------------------------------
+      // 1. Initial Load Choreography
       const introTl = gsap.timeline({ defaults: { ease: 'power4.out' } });
 
       introTl
@@ -238,7 +254,7 @@
           duration: 0.8
         }, '-=0.4');
 
-      // Number Counting Animation
+      // Metric Number Increment Counter
       function startCounters() {
         document.querySelectorAll('.stat-number').forEach((counter) => {
           const target = parseFloat(counter.getAttribute('data-target'));
@@ -258,11 +274,7 @@
         });
       }
 
-      // ----------------------------------------------------
-      // 2. Scroll-Driven Animation (GSAP ScrollTrigger Scrub)
-      // ----------------------------------------------------
-      // We pin the hero container over 2500px of scrolling distance.
-      // scrub: 1.2 applies fluid inertia/lerp to track the wheel motion.
+      // 2. Scroll-Driven Animation (GSAP ScrollTrigger)
       const scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: '#hero-scroll-container',
@@ -275,7 +287,7 @@
       });
 
       scrollTl
-        // Phase 1: Headline recedes and blurs out as the user begins scrolling
+        // Phase 1: Headline fades out
         .to('#hero-headline', {
           scale: 0.85,
           opacity: 0,
@@ -293,7 +305,7 @@
           duration: 0.2
         }, 0)
 
-        // Phase 2: Car zooms forward and accelerates across screen
+        // Phase 2: Car zooms towards camera
         .to('#car-wrapper', {
           scale: 1.35,
           y: -20,
@@ -310,7 +322,7 @@
           ease: 'power1.inOut'
         }, 0)
 
-        // Phase 3: Metrics transform and shift down smoothly
+        // Phase 3: Metrics slide down & dim
         .to('.metric-card', {
           y: 40,
           opacity: 0.2,
@@ -318,7 +330,7 @@
           ease: 'power1.in'
         }, 0.2)
         
-        // Phase 4: Dynamic horizontal drive-by shift
+        // Phase 4: Drive-by horizontal exit
         .to('#car-wrapper', {
           x: '35vw',
           rotationZ: 1.5,
@@ -330,6 +342,43 @@
           duration: 1.2,
           ease: 'power2.in'
         }, 0.6);
+
+      // 3. Mouse-Move 3D Tilt & Parallax (gsap.quickTo)
+      const tiltTarget = document.querySelector('#car-tilt-target');
+      const shadowTarget = document.querySelector('#car-shadow');
+
+      const setRotateX = gsap.quickTo(tiltTarget, 'rotationX', { duration: 0.6, ease: 'power2.out' });
+      const setRotateY = gsap.quickTo(tiltTarget, 'rotationY', { duration: 0.6, ease: 'power2.out' });
+      const setParallaxX = gsap.quickTo(tiltTarget, 'x', { duration: 0.7, ease: 'power2.out' });
+      const setParallaxY = gsap.quickTo(tiltTarget, 'y', { duration: 0.7, ease: 'power2.out' });
+
+      const setShadowX = gsap.quickTo(shadowTarget, 'x', { duration: 0.7, ease: 'power2.out' });
+      const setShadowScaleX = gsap.quickTo(shadowTarget, 'scaleX', { duration: 0.6, ease: 'power2.out' });
+
+      window.addEventListener('mousemove', (e) => {
+        const normX = (e.clientX / window.innerWidth) - 0.5;
+        const normY = (e.clientY / window.innerHeight) - 0.5;
+
+        const maxPitch = 14;
+        const maxYaw = 20;
+
+        setRotateX(-normY * maxPitch);
+        setRotateY(normX * maxYaw);
+        setParallaxX(normX * 35);
+        setParallaxY(normY * 18);
+
+        setShadowX(-normX * 28);
+        setShadowScaleX(1 + Math.abs(normX) * 0.15);
+      });
+
+      document.addEventListener('mouseleave', () => {
+        setRotateX(0);
+        setRotateY(0);
+        setParallaxX(0);
+        setParallaxY(0);
+        setShadowX(0);
+        setShadowScaleX(1);
+      });
 
     });
   </script>
