@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Luxury Hypercar | W E L C O M E   I T Z   F I Z Z</title>
+  <title>ITZ FIZZ Hypercar | Scroll-Driven Interactive Showcase</title>
   
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
@@ -29,7 +29,7 @@
   <!-- Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;600;800&family=Syncopate:wght@400;700&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Syncopate:wght@400;700;800&display=swap" rel="stylesheet">
 
   <!-- GSAP & ScrollTrigger -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
@@ -50,85 +50,128 @@
     }
 
     .radial-gradient-bg {
-      background: radial-gradient(circle at 50% 48%, rgba(255, 45, 85, 0.14) 0%, rgba(6, 7, 9, 0) 70%);
+      background: radial-gradient(circle at 50% 50%, rgba(255, 45, 85, 0.15) 0%, rgba(6, 7, 9, 0) 72%);
     }
 
     .glass-card {
-      background: rgba(18, 20, 29, 0.7);
+      background: rgba(18, 20, 29, 0.75);
       backdrop-filter: blur(16px);
       -webkit-backdrop-filter: blur(16px);
       border: 1px solid rgba(255, 255, 255, 0.08);
     }
   </style>
 </head>
-<body class="selection:bg-brand-red selection:text-white">
+<body class="selection:bg-brand-red selection:text-white relative">
+
+  <!-- Interactive Background Canvas (Particles & Embers) -->
+  <canvas id="particle-canvas" class="fixed inset-0 pointer-events-none z-0"></canvas>
 
   <!-- Fixed Header Navigation -->
-  <header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-5 max-w-7xl mx-auto backdrop-blur-md bg-black/30 border-b border-white/5 rounded-b-2xl mt-0">
+  <header class="fixed top-0 left-0 right-0 z-50 flex items-center justify-between px-6 md:px-12 py-5 max-w-7xl mx-auto backdrop-blur-md bg-black/40 border-b border-white/5 rounded-b-2xl">
     <a href="#overview" class="nav-link text-xs font-bold tracking-[0.35em] uppercase text-zinc-200 font-display hover:text-brand-red transition-colors">
       ITZ<span class="text-brand-red">FIZZ</span>
     </a>
     
-    <nav class="flex items-center gap-6 md:gap-10 text-[11px] tracking-[0.25em] text-zinc-400 font-medium uppercase">
+    <nav class="hidden md:flex items-center gap-8 text-[11px] tracking-[0.25em] text-zinc-400 font-medium uppercase">
       <a href="#overview" class="nav-link hover:text-white transition-colors">Overview</a>
       <a href="#performance" class="nav-link hover:text-white transition-colors">Performance</a>
       <a href="#specs" class="nav-link hover:text-white transition-colors">Specs</a>
+      <a href="#thank-you" class="nav-link hover:text-white transition-colors">Reserve</a>
     </nav>
 
-    <a href="#specs" class="nav-link text-[11px] uppercase tracking-widest px-5 py-2 rounded-full border border-zinc-700 hover:border-brand-red transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,45,85,0.4)]">
-      Inquire
+    <a href="#thank-you" class="nav-link text-[11px] uppercase tracking-widest px-5 py-2 rounded-full border border-zinc-700 hover:border-brand-red transition-all duration-300 hover:shadow-[0_0_20px_rgba(255,45,85,0.4)]">
+      Explore
     </a>
   </header>
 
   <!-- ========================================================
-       1. HERO / OVERVIEW SECTION (PINNED VIA GSAP SCROLLTRIGGER)
+       1. HERO SECTION (GSAP SCROLL PINNED)
        ======================================================== -->
-  <section id="overview" class="relative w-full h-screen flex flex-col justify-between items-center overflow-hidden radial-gradient-bg px-4 pt-24 pb-8">
+  <section id="overview" class="relative w-full h-screen flex flex-col justify-between items-center overflow-hidden radial-gradient-bg px-4 pt-24 pb-8 z-10">
     
     <!-- Ambient Red Underglow Behind Car -->
-    <div id="ambient-glow" class="absolute w-[650px] h-[360px] bg-brand-red/20 blur-[130px] rounded-full pointer-events-none top-1/3 will-change-transform"></div>
+    <div id="ambient-glow" class="absolute w-[680px] h-[380px] bg-brand-red/20 blur-[130px] rounded-full pointer-events-none top-1/3 will-change-transform"></div>
 
-    <!-- Top Headline Group (Load staggered, Scroll scrubbed) -->
+    <!-- Top Headline Group: WELCOME followed by bigger ITZ FIZZ -->
     <div id="hero-header-group" class="text-center z-10 select-none mt-2 will-change-transform">
-      <p id="hero-kicker" class="text-[11px] md:text-xs font-semibold tracking-[0.6em] text-brand-red uppercase mb-3 opacity-0">
-        All-Electric Hyper-Tourer Architecture
+      <p id="hero-kicker" class="text-[11px] md:text-xs font-semibold tracking-[0.6em] text-brand-red uppercase mb-2 opacity-0">
+        Electric Hyper-Tourer Prototype
       </p>
-      <h1 id="hero-headline" class="text-3xl sm:text-5xl md:text-6xl lg:text-7xl font-bold font-display uppercase tracking-[0.28em] md:tracking-[0.45em] text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-100 to-zinc-500 opacity-0 leading-tight">
-        W E L C O M E &nbsp; I T Z &nbsp; F I Z Z
+      
+      <!-- WELCOME -->
+      <h2 id="hero-welcome" class="text-xl sm:text-2xl md:text-3xl font-bold font-display uppercase tracking-[0.45em] text-zinc-400 opacity-0 leading-tight">
+        W E L C O M E
+      </h2>
+      
+      <!-- ITZ FIZZ (Noticeably Bigger) -->
+      <h1 id="hero-brand" class="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-black font-display uppercase tracking-[0.25em] md:tracking-[0.38em] text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-100 to-zinc-600 opacity-0 leading-tight mt-1">
+        I T Z &nbsp; F I Z Z
       </h1>
     </div>
 
-    <!-- Vehicle Centerpiece with 3D Mouse Tilt & Parallax -->
-    <div 
-      id="car-wrapper" 
-      class="relative w-full max-w-4xl h-[260px] sm:h-[340px] md:h-[400px] flex items-center justify-center my-auto will-change-transform z-20"
-      style="perspective: 1200px;"
-    >
+    <!-- CENTER HERO VISUAL + DYNAMIC LEFT CONTENT PANEL -->
+    <div class="relative w-full max-w-6xl flex items-center justify-center my-auto z-20">
+      
+      <!-- Telemetry Content: Revealed on the left when car moves right -->
       <div 
-        id="car-tilt-target" 
-        class="relative w-full h-full flex items-center justify-center will-change-transform" 
-        style="transform-style: preserve-3d;"
+        id="side-content-panel" 
+        class="absolute left-2 md:left-6 max-w-xs md:max-w-sm glass-card p-6 rounded-2xl opacity-0 transform -translate-x-12 will-change-transform pointer-events-none z-30"
       >
-        <!-- Ground Shadow (Reacts inversely to pointer) -->
-        <div 
-          id="car-shadow" 
-          class="absolute bottom-6 w-3/4 h-10 bg-black/85 blur-2xl rounded-full transform will-change-transform pointer-events-none"
-        ></div>
-
-        <!-- Ground Glow Reflection -->
-        <div 
-          id="car-ground-light" 
-          class="absolute bottom-8 w-1/2 h-6 bg-brand-red/30 blur-xl rounded-full pointer-events-none"
-        ></div>
-        
-        <!-- Car Silhouette / Hero Image -->
-        <img 
-          id="hero-car"
-          src="https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1600&q=80" 
-          alt="Aerodynamic Electric Sports Car" 
-          class="relative w-full h-full object-contain filter drop-shadow-[0_20px_45px_rgba(0,0,0,0.95)] will-change-transform pointer-events-none select-none rounded-2xl"
-        />
+        <div class="flex items-center gap-2 mb-2">
+          <span class="w-2 h-2 rounded-full bg-brand-red animate-ping"></span>
+          <span class="text-[10px] tracking-[0.35em] text-brand-red font-bold uppercase">Dynamic Telemetry</span>
+        </div>
+        <h3 class="text-xl font-bold font-display uppercase text-white mb-2 leading-tight">
+          Active Downforce Channel
+        </h3>
+        <p class="text-zinc-400 text-xs leading-relaxed mb-4">
+          Underfloor ground-effect venturi tunnels generate active lateral grip, automatically pitching aero surfaces under braking and high-speed cornering.
+        </p>
+        <div class="grid grid-cols-2 gap-3 pt-3 border-t border-white/10">
+          <div>
+            <div class="text-[10px] uppercase text-zinc-500 font-semibold tracking-wider">Aero Balance</div>
+            <div class="text-lg font-bold font-display text-white">48:52 <span class="text-brand-red text-xs">F/R</span></div>
+          </div>
+          <div>
+            <div class="text-[10px] uppercase text-zinc-500 font-semibold tracking-wider">Peak Grip</div>
+            <div class="text-lg font-bold font-display text-white">1.85 <span class="text-brand-red text-xs">G</span></div>
+          </div>
+        </div>
       </div>
+
+      <!-- Vehicle Centerpiece with 3D Mouse Tilt & Parallax -->
+      <div 
+        id="car-wrapper" 
+        class="relative w-full max-w-4xl h-[260px] sm:h-[340px] md:h-[410px] flex items-center justify-center will-change-transform"
+        style="perspective: 1200px;"
+      >
+        <div 
+          id="car-tilt-target" 
+          class="relative w-full h-full flex items-center justify-center will-change-transform" 
+          style="transform-style: preserve-3d;"
+        >
+          <!-- Ground Shadow (Reacts inversely to pointer) -->
+          <div 
+            id="car-shadow" 
+            class="absolute bottom-6 w-3/4 h-10 bg-black/90 blur-2xl rounded-full transform will-change-transform pointer-events-none"
+          ></div>
+
+          <!-- Ground Light Reflection -->
+          <div 
+            id="car-ground-light" 
+            class="absolute bottom-8 w-1/2 h-6 bg-brand-red/35 blur-xl rounded-full pointer-events-none"
+          ></div>
+          
+          <!-- Car Silhouette / Hero Image -->
+          <img 
+            id="hero-car"
+            src="https://images.unsplash.com/photo-1617788138017-80ad40651399?auto=format&fit=crop&w=1600&q=80" 
+            alt="Aerodynamic Electric Sports Car" 
+            class="relative w-full h-full object-contain filter drop-shadow-[0_25px_50px_rgba(0,0,0,0.95)] will-change-transform pointer-events-none select-none rounded-2xl"
+          />
+        </div>
+      </div>
+
     </div>
 
     <!-- Impact Metrics & Statistics Row (Percentages & Metrics) -->
@@ -264,39 +307,174 @@
     </div>
   </section>
 
+  <!-- ========================================================
+       4. THANK YOU / CLOSING SECTION
+       ======================================================== -->
+  <section id="thank-you" class="relative z-30 min-h-screen bg-[#060709] border-t border-zinc-800/80 px-6 py-28 flex flex-col justify-center items-center text-center overflow-hidden">
+    <!-- Ambient Red Center Light -->
+    <div class="absolute w-[500px] h-[300px] bg-brand-red/15 blur-[120px] rounded-full pointer-events-none"></div>
+
+    <div class="relative z-10 max-w-3xl mx-auto flex flex-col items-center">
+      <span class="text-xs uppercase tracking-[0.5em] text-brand-red font-bold mb-4">You Have Reached The Destination</span>
+      <h2 class="text-4xl sm:text-6xl md:text-7xl font-bold font-display uppercase tracking-[0.2em] text-transparent bg-clip-text bg-gradient-to-b from-white via-zinc-200 to-zinc-500 leading-tight mb-6">
+        THANK YOU
+      </h2>
+      <p class="text-zinc-400 text-sm md:text-base max-w-xl leading-relaxed mb-10">
+        Thank you for experiencing the ITZ FIZZ interactive prototype. Engineered for precision, built for velocity, and brought to life through smooth motion design.
+      </p>
+
+      <div class="flex flex-wrap items-center justify-center gap-4">
+        <a href="#overview" class="nav-link text-xs uppercase tracking-[0.25em] font-semibold px-8 py-3.5 rounded-full bg-brand-red text-white hover:bg-brand-red/80 transition-all shadow-[0_0_25px_rgba(255,45,85,0.4)]">
+          Back To Top
+        </a>
+        <button onclick="window.scrollTo({top: 0, behavior: 'smooth'})" class="text-xs uppercase tracking-[0.25em] font-semibold px-8 py-3.5 rounded-full border border-zinc-700 hover:border-zinc-500 transition-all text-zinc-300">
+          Replay Motion
+        </button>
+      </div>
+    </div>
+  </section>
+
   <!-- Footer -->
-  <footer class="border-t border-zinc-900 bg-[#060709] py-8 text-center text-xs text-zinc-600 tracking-widest uppercase">
+  <footer class="border-t border-zinc-900 bg-[#060709] py-8 text-center text-xs text-zinc-600 tracking-widest uppercase relative z-30">
     &copy; 2026 ITZFIZZ Motors Prototype. All rights reserved.
   </footer>
 
   <!-- ========================================================
-       GSAP INTERACTION SCRIPT
+       SCRIPTS: PARTICLES, GSAP LOAD & SCROLL ANIMATION
        ======================================================== -->
   <script>
     gsap.registerPlugin(ScrollTrigger);
 
+    // --------------------------------------------------------
+    // A. Interactive Canvas Particles & Embers
+    // --------------------------------------------------------
+    const canvas = document.getElementById('particle-canvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let mouse = { x: null, y: null, radius: 100 };
+    let scrollVelocity = 0;
+    let lastScrollY = window.scrollY;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    resizeCanvas();
+    window.addEventListener('resize', resizeCanvas);
+
+    class Particle {
+      constructor() {
+        this.reset();
+      }
+      reset() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 0.6;
+        this.speedX = (Math.random() - 0.5) * 0.5;
+        this.speedY = -(Math.random() * 0.6 + 0.2);
+        this.alpha = Math.random() * 0.5 + 0.15;
+        this.isRed = Math.random() > 0.65; // ~35% brand red embers
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY - (scrollVelocity * 0.12);
+
+        // Repel from mouse
+        if (mouse.x !== null) {
+          const dx = mouse.x - this.x;
+          const dy = mouse.y - this.y;
+          const dist = Math.sqrt(dx * dx + dy * dy);
+          if (dist < mouse.radius) {
+            const force = (mouse.radius - dist) / mouse.radius;
+            this.x -= (dx / dist) * force * 3;
+            this.y -= (dy / dist) * force * 3;
+          }
+        }
+
+        // Screen wrap
+        if (this.y < -10) this.y = canvas.height + 10;
+        if (this.y > canvas.height + 10) this.y = -10;
+        if (this.x < -10) this.x = canvas.width + 10;
+        if (this.x > canvas.width + 10) this.x = -10;
+      }
+      draw() {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fillStyle = this.isRed 
+          ? `rgba(255, 45, 85, ${this.alpha * 0.9})` 
+          : `rgba(255, 255, 255, ${this.alpha * 0.6})`;
+        ctx.shadowBlur = this.isRed ? 8 : 0;
+        ctx.shadowColor = '#ff2d55';
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+    }
+
+    function initParticles() {
+      particles = [];
+      const count = Math.min(Math.floor(window.innerWidth / 16), 80);
+      for (let i = 0; i < count; i++) {
+        particles.push(new Particle());
+      }
+    }
+    initParticles();
+
+    function renderParticles() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.update();
+        p.draw();
+      });
+      scrollVelocity *= 0.92; // Damping
+      requestAnimationFrame(renderParticles);
+    }
+    requestAnimationFrame(renderParticles);
+
+    window.addEventListener('scroll', () => {
+      const delta = window.scrollY - lastScrollY;
+      scrollVelocity = Math.max(Math.min(delta, 18), -18);
+      lastScrollY = window.scrollY;
+    }, { passive: true });
+
+    window.addEventListener('mousemove', (e) => {
+      mouse.x = e.clientX;
+      mouse.y = e.clientY;
+    });
+
+    window.addEventListener('mouseleave', () => {
+      mouse.x = null;
+      mouse.y = null;
+    });
+
+    // --------------------------------------------------------
+    // B. GSAP Orchestration & Load Animations
+    // --------------------------------------------------------
     window.addEventListener('DOMContentLoaded', () => {
 
-      // ----------------------------------------------------
-      // 1. Initial Load Animation Timeline
-      // ----------------------------------------------------
+      // 1. Initial Load Timeline
       const introTl = gsap.timeline({ defaults: { ease: 'power4.out' } });
 
       introTl
         .to('#hero-kicker', {
           opacity: 1,
           y: 0,
-          duration: 0.9,
-          delay: 0.2
+          duration: 0.8,
+          delay: 0.15
         })
-        .to('#hero-headline', {
+        .to('#hero-welcome', {
+          opacity: 1,
+          y: 0,
+          duration: 0.9,
+          letterSpacing: window.innerWidth > 768 ? '0.45em' : '0.28em'
+        }, '-=0.6')
+        .to('#hero-brand', {
           opacity: 1,
           y: 0,
           duration: 1.1,
-          letterSpacing: window.innerWidth > 768 ? '0.45em' : '0.28em'
+          letterSpacing: window.innerWidth > 768 ? '0.38em' : '0.22em'
         }, '-=0.7')
         .fromTo('#car-wrapper', 
-          { scale: 0.85, opacity: 0, y: 35 },
+          { scale: 0.84, opacity: 0, y: 35 },
           { scale: 1, opacity: 1, y: 0, duration: 1.3, ease: 'power3.out' },
           '-=0.9'
         )
@@ -304,7 +482,7 @@
           opacity: 1,
           y: 0,
           duration: 0.8,
-          stagger: 0.1,
+          stagger: 0.08,
           ease: 'back.out(1.2)',
           onComplete: startCounters
         }, '-=0.8')
@@ -313,7 +491,7 @@
           duration: 0.6
         }, '-=0.4');
 
-      // Metric Numbers Increment Animation
+      // Metric Counter Animation
       function startCounters() {
         document.querySelectorAll('.stat-number').forEach((counter) => {
           const target = parseFloat(counter.getAttribute('data-target'));
@@ -333,15 +511,12 @@
         });
       }
 
-      // ----------------------------------------------------
       // 2. Scroll-Driven Hero Animation (GSAP Pin + Scrub)
-      // ----------------------------------------------------
-      // Pinning #overview directly with pinSpacing: true guarantees NO layout gaps
       const scrollTl = gsap.timeline({
         scrollTrigger: {
           trigger: '#overview',
           start: 'top top',
-          end: '+=1600',
+          end: '+=1800',
           pin: true,
           pinSpacing: true,
           scrub: 1.2,
@@ -351,7 +526,7 @@
       });
 
       scrollTl
-        // Phase 1: Headline wrapper fades & moves up smoothly
+        // Phase 1: Headline wrapper fades and lifts out
         .to('#hero-header-group', {
           scale: 0.88,
           opacity: 0,
@@ -364,16 +539,16 @@
           duration: 0.2
         }, 0)
 
-        // Phase 2: Metrics row sinks and fades cleanly
+        // Phase 2: Metrics row sinks and fades out
         .to('#metrics-container', {
           y: 35,
           opacity: 0,
           ease: 'power1.in'
         }, 0.1)
 
-        // Phase 3: Car scales up (zooms forward towards the viewer)
+        // Phase 3: Car scales and moves up toward camera
         .to('#car-wrapper', {
-          scale: 1.3,
+          scale: 1.28,
           y: -15,
           ease: 'power1.inOut'
         }, 0)
@@ -388,22 +563,28 @@
           ease: 'power1.inOut'
         }, 0)
         
-        // Phase 4: Car accelerates forward across screen seamlessly before unpinning
+        // Phase 4: Car accelerates to the RIGHT
         .to('#car-wrapper', {
           x: '24vw',
           rotationZ: 1.2,
-          duration: 1.0,
+          duration: 1.1,
           ease: 'power2.in'
         }, 0.5)
         .to('#car-shadow', {
           x: '24vw',
-          duration: 1.0,
+          duration: 1.1,
           ease: 'power2.in'
-        }, 0.5);
+        }, 0.5)
 
-      // ----------------------------------------------------
+        // Phase 5: Side telemetry card slides in on the LEFT
+        .to('#side-content-panel', {
+          opacity: 1,
+          x: 0,
+          duration: 0.9,
+          ease: 'power2.out'
+        }, 0.6);
+
       // 3. Mouse-Move 3D Tilt & Parallax (Desktop Only)
-      // ----------------------------------------------------
       const tiltTarget = document.querySelector('#car-tilt-target');
       const shadowTarget = document.querySelector('#car-shadow');
 
@@ -420,8 +601,8 @@
           const normX = (e.clientX / window.innerWidth) - 0.5;
           const normY = (e.clientY / window.innerHeight) - 0.5;
 
-          const maxPitch = 12; // Degrees
-          const maxYaw = 16;   // Degrees
+          const maxPitch = 12;
+          const maxYaw = 16;
 
           setRotateX(-normY * maxPitch);
           setRotateY(normX * maxYaw);
@@ -442,9 +623,7 @@
         });
       }
 
-      // ----------------------------------------------------
       // 4. Smooth Anchor Navigation Handling
-      // ----------------------------------------------------
       document.querySelectorAll('.nav-link').forEach((anchor) => {
         anchor.addEventListener('click', function(e) {
           const href = this.getAttribute('href');
